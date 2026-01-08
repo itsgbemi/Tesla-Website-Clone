@@ -1,6 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { HelpCircle, Globe, User, X, ChevronRight } from 'lucide-react';
+import { HelpCircle, Globe, X, ChevronRight } from 'lucide-react';
+
+const ProfileIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2M6.858 18.752c.605-1.868 2.722-3.24 5.142-3.24s4.537 1.372 5.142 3.24C15.712 19.844 13.933 20.5 12 20.5s-3.712-.656-5.142-1.748m11.469-1.095c-1.02-2.165-3.483-3.645-6.327-3.645s-5.307 1.48-6.327 3.645A8.46 8.46 0 0 1 3.5 12c0-4.687 3.813-8.5 8.5-8.5s8.5 3.813 8.5 8.5a8.46 8.46 0 0 1-2.173 5.657M12 6a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7m0 5.5c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2"></path>
+  </svg>
+);
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -55,6 +61,13 @@ const Header: React.FC = () => {
 
   const chargingSideLinks = [
     'Help Me Charge', 'Charging Calculator', 'Charging With NACS', 'Supercharger Voting', 'Host a Supercharger'
+  ];
+
+  const shopProducts = [
+    { name: 'Charging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767896460/mjhf5qqhp7msb7nqbtij.avif' },
+    { name: 'Vehicle Accessories', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767896463/ddsevbvpjkeoa3th3bha.avif' },
+    { name: 'Apparel', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767896465/rayy33djc3mxsaqgdpte.avif' },
+    { name: 'Lifestyle', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767896503/ttmoh686tubzvdp7zbik.avif' },
   ];
 
   const discoverLinks = {
@@ -118,7 +131,7 @@ const Header: React.FC = () => {
             <Globe size={20} />
           </button>
           <button className="hidden md:block p-2 hover:bg-black/5 rounded-md transition-colors" aria-label="Account">
-            <User size={20} />
+            <ProfileIcon className="w-5 h-5" />
           </button>
           <button 
             onClick={() => setIsMobileMenuOpen(true)}
@@ -210,6 +223,18 @@ const Header: React.FC = () => {
             </div>
           )}
 
+          {/* Shop Mega Menu */}
+          {activeDropdown === 'Shop' && (
+            <div className="max-w-6xl mx-auto flex justify-center items-center gap-x-12 px-12">
+              {shopProducts.map((prod) => (
+                <div key={prod.name} className="flex flex-col items-center group cursor-pointer">
+                  <img src={prod.image} alt={prod.name} className="w-full max-w-[200px] h-auto object-contain mb-6 transform group-hover:scale-105 transition-transform duration-500" />
+                  <h4 className="text-[18px] font-bold text-black">{prod.name}</h4>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Discover Mega Menu */}
           {activeDropdown === 'Discover' && (
             <div className="max-w-6xl mx-auto grid grid-cols-3 gap-12 px-12">
@@ -266,7 +291,7 @@ const Header: React.FC = () => {
 
             <div className="flex items-center space-x-4 cursor-pointer">
               <div className="w-6 h-6 rounded-full border-2 border-gray-800 flex items-center justify-center">
-                <User size={14} className="text-gray-800" />
+                <ProfileIcon className="w-4 h-4 text-gray-800" />
               </div>
               <span className="text-[16px] font-semibold">Account</span>
             </div>

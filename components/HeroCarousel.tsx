@@ -39,9 +39,9 @@ const HeroCarousel: React.FC = () => {
             />
           </picture>
 
-          {/* Combined Content Area: Text and Buttons together */}
+          {/* Combined Content Area */}
           <div className="absolute inset-0 flex flex-col items-center justify-start pt-[18%] md:pt-[12%] z-20 px-6">
-            <div className="text-center mb-8">
+            <div className="text-center mb-6"> {/* Reduced margin from mb-8 to mb-6 */}
               <h1 className="text-[40px] md:text-[56px] font-semibold text-white tracking-tight drop-shadow-lg">
                 {slide.title}
               </h1>
@@ -50,8 +50,8 @@ const HeroCarousel: React.FC = () => {
               </p>
             </div>
 
-            {/* CTA Buttons positioned immediately after text with increased padding, side-by-side on all screens */}
-            <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full md:w-auto">
+            {/* CTA Buttons */}
+            <div className="flex flex-row items-center justify-center gap-3 md:gap-4 w-full md:w-auto mt-2"> {/* Added small margin for fine-tuning */}
               <button className="flex-1 md:flex-initial md:w-[264px] bg-[#3E6AE1] text-white py-3 md:py-3.5 rounded-md font-medium text-[13px] md:text-[14px] hover:bg-[#3457B1] transition-colors">
                 {slide.primaryCta}
               </button>
