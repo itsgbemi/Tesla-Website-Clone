@@ -1,6 +1,6 @@
 
-import React, { useRef, useState } from 'react';
-import { ChevronRight } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 const MODELS = [
   {
@@ -33,31 +33,51 @@ const MODELS = [
 const VehicleModelCarousel: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeDot, setActiveDot] = useState(0);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
 
-  const handleScroll = () => {
+  const updateArrowVisibility = () => {
     if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
-      const index = Math.round(scrollLeft / clientWidth);
-      setActiveDot(index);
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 20);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 20);
+      
+      // Update active dot based on scroll position
+      const index = Math.round(scrollLeft / (clientWidth * 0.85)); // 0.85 approx mobile card width
+      setActiveDot(Math.min(index, MODELS.length - 1));
+    }
+  };
+
+  useEffect(() => {
+    updateArrowVisibility();
+    window.addEventListener('resize', updateArrowVisibility);
+    return () => window.removeEventListener('resize', updateArrowVisibility);
+  }, []);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      const scrollAmount = direction === 'left' ? -clientWidth * 0.8 : clientWidth * 0.8;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="bg-white py-16 px-4 md:px-8">
+    <div className="bg-white py-16 px-4 md:px-8 relative group">
       <div 
         ref={scrollRef}
-        onScroll={handleScroll}
+        onScroll={updateArrowVisibility}
         className="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-8"
       >
         {MODELS.map((model, idx) => (
           <div 
             key={idx}
-            className="flex-shrink-0 w-[85vw] md:w-[600px] aspect-[4/3] md:aspect-[16/10] bg-gray-50 rounded-lg overflow-hidden relative snap-center group"
+            className="flex-shrink-0 w-[85vw] md:w-[600px] aspect-[4/3] md:aspect-[16/10] bg-gray-50 rounded-lg overflow-hidden relative snap-center group/card"
           >
             <img 
               src={model.image} 
               alt={model.name} 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1000ms] ease-out"
+              className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-[1000ms] ease-out"
             />
             
             {/* Labels */}
@@ -77,21 +97,46 @@ const VehicleModelCarousel: React.FC = () => {
                 Learn More
               </button>
             </div>
-
-            {/* Next Arrow Peek (Only on desktop) */}
-            <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm p-3 rounded-md text-white hidden md:block opacity-0 group-hover:opacity-100 transition-opacity">
-              <ChevronRight size={20} />
-            </button>
           </div>
         ))}
       </div>
 
+      {/* Navigation Arrows */}
+      {showLeftArrow && (
+        <button 
+          onClick={() => scroll('left')}
+          className="absolute left-6 md:left-12 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/60 backdrop-blur-md p-3 rounded-md text-black z-30 transition-all shadow-sm hidden md:block"
+          aria-label="Scroll Left"
+        >
+          <ChevronLeft size={24} />
+        </button>
+      )}
+      
+      {showRightArrow && (
+        <button 
+          onClick={() => scroll('right')}
+          className="absolute right-6 md:right-12 top-1/2 -translate-y-1/2 bg-white/40 hover:bg-white/60 backdrop-blur-md p-3 rounded-md text-black z-30 transition-all shadow-sm hidden md:block"
+          aria-label="Scroll Right"
+        >
+          <ChevronRight size={24} />
+        </button>
+      )}
+
       {/* Dots Indicator */}
-      <div className="flex justify-center gap-2 mt-4">
+      <div className="flex justify-center gap-4 mt-4">
         {MODELS.map((_, idx) => (
-          <div 
+          <button
             key={idx}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${activeDot === idx ? 'bg-gray-800 scale-125' : 'bg-gray-300'}`}
+            onClick={() => {
+              if (scrollRef.current) {
+                const cardWidth = window.innerWidth < 768 ? window.innerWidth * 0.85 : 600;
+                scrollRef.current.scrollTo({ left: idx * (cardWidth + 24), behavior: 'smooth' });
+              }
+            }}
+            className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+              activeDot === idx ? 'bg-gray-800 scale-125' : 'bg-gray-300'
+            }`}
+            aria-label={`Go to item ${idx + 1}`}
           />
         ))}
       </div>
