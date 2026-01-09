@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import StickyControls from './components/StickyControls';
 import VehicleModelCarousel from './components/VehicleModelCarousel';
 import PromotionsSection from './components/PromotionsSection';
+import FeaturesSection from './components/FeaturesSection';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -27,6 +28,9 @@ function App() {
 
         {/* Vehicle Model Showcase Carousel */}
         <VehicleModelCarousel />
+
+        {/* FSD Video and Features Cards */}
+        <FeaturesSection />
 
         {/* Promotions Section (Current Offers / American Heroes) */}
         <PromotionsSection />
