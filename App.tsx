@@ -5,6 +5,7 @@ import HeroCarousel from './components/HeroCarousel';
 import Footer from './components/Footer';
 import StickyControls from './components/StickyControls';
 import VehicleModelCarousel from './components/VehicleModelCarousel';
+import PromotionsSection from './components/PromotionsSection';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -26,6 +27,9 @@ function App() {
 
         {/* Vehicle Model Showcase Carousel */}
         <VehicleModelCarousel />
+
+        {/* Promotions Section (Current Offers / American Heroes) */}
+        <PromotionsSection />
       </main>
 
       {/* Site Footer */}
