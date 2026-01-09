@@ -8,7 +8,11 @@ const ProfileIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuOpenChange: (isOpen: boolean) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onMenuOpenChange }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -21,6 +25,11 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleDropdown = (link: string | null) => {
+    setActiveDropdown(link);
+    onMenuOpenChange(link !== null);
+  };
+
   const navLinks = ['Vehicles', 'Energy', 'Charging', 'Discover', 'Shop'];
   const logoUrl = 'https://res.cloudinary.com/dqhawdcol/image/upload/v1761718553/xvtekklcntsfqyt2qtzp.png';
 
@@ -30,7 +39,7 @@ const Header: React.FC = () => {
     { name: 'Model Y', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883031/wlzqtleh16jnrzh5rpyz.avif', links: ['Learn', 'Order'] },
     { name: 'Model X', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767882924/nusmx2stlth2uvzikczv.avif', links: ['Learn', 'Order'] },
     { name: 'Cybertruck', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767882922/iywrj80duahyxcnadsbq.avif', links: ['Learn', 'Order'] },
-    { name: 'Inventory', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767882919/exbx5kifg7nndeqlo6fo.avif', links: ['New', 'Pre-Owned'] },
+    { name: 'Inventory', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767882919/exbx5kifg7nndeqlo6fo.avif', links: [{ text: 'New', path: '#' }, { text: 'Pre-Owned', path: '#' }] },
   ];
 
   const vehicleSideLinks = [
@@ -46,22 +55,11 @@ const Header: React.FC = () => {
     { name: 'Megapack', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883504/yx9ckmhlgzacr5xx70xl.avif', links: ['Learn'] },
   ];
 
-  const energySideLinks = [
-    'Schedule a Consultation', 'Why Solar', 'Incentives', 'Support',
-    'Partner with Tesla', 'Commercial', 'Utilities'
-  ];
-
-  const chargingProducts = [
-    { name: 'Charging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883796/jg84dkls9i9bz17pvep5.avif', links: ['Learn'] },
-    { name: 'Home Charging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883800/lfomn5nx32cpgfdlsetq.avif', links: ['Learn', 'Shop'] },
-    { name: 'Supercharging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883803/yy9cjo0lbyu0s6czvnly.avif', links: ['Learn', 'Find'] },
-    { name: 'Wall Connector for Business', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883823/esm3oqvefealnn2prxvi.avif', links: ['Learn', 'Order'] },
-    { name: 'Supercharger for Business', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883857/v87ghkhrqfvrl0sfxanb.avif', links: ['Learn', 'Order'] },
-  ];
-
-  const chargingSideLinks = [
-    'Help Me Charge', 'Charging Calculator', 'Charging With NACS', 'Supercharger Voting', 'Host a Supercharger'
-  ];
+  const discoverLinks = {
+    Resources: ['Demo Drive', 'Insurance', 'Current Offers', 'Learn', 'Video Guides', 'Customer Stories', 'Events', 'Safety'],
+    'Location Services': ['Find Us', 'Find a Collision Center', 'Find a Certified Installer'],
+    Company: ['About', 'Careers', 'Investor Relations']
+  };
 
   const shopProducts = [
     { name: 'Charging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767896460/mjhf5qqhp7msb7nqbtij.avif' },
@@ -70,42 +68,19 @@ const Header: React.FC = () => {
     { name: 'Lifestyle', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767896503/ttmoh686tubzvdp7zbik.avif' },
   ];
 
-  const discoverLinks = {
-    Resources: [
-      'Demo Drive', 'Insurance', 'Current Offers', 'Learn', 
-      'Video Guides', 'Customer Stories', 'Events', 'Safety'
-    ],
-    'Location Services': [
-      'Find Us', 'Find a Collision Center', 'Find a Certified Installer'
-    ],
-    Company: [
-      'About', 'Careers', 'Investor Relations'
-    ]
-  };
-
-  const mobileLinks = [
-    { name: 'Vehicles', hasSub: true },
-    { name: 'Energy', hasSub: true },
-    { name: 'Charging', hasSub: true },
-    { name: 'Discover', hasSub: true },
-    { name: 'Shop', hasSub: false },
-    { name: 'Support', hasSub: false },
-  ];
-
   return (
     <>
       <header 
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 flex items-center justify-between px-6 md:px-12 py-5 
-          ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent md:bg-white'} 
-          text-black`}
-        onMouseLeave={() => setActiveDropdown(null)}
+          ${isScrolled || activeDropdown ? 'bg-white text-black' : 'bg-transparent text-white md:text-black md:bg-white'}`}
+        onMouseLeave={() => handleDropdown(null)}
       >
         <div className="flex-1">
           <a href="/" aria-label="Tesla Home">
             <img 
               src={logoUrl} 
               alt="Tesla" 
-              className={`h-6 w-auto transition-all ${isScrolled ? 'invert-0' : 'invert md:invert-0'}`}
+              className={`h-6 w-auto transition-all ${isScrolled || activeDropdown ? 'invert-0' : 'invert md:invert-0'}`}
             />
           </a>
         </div>
@@ -115,7 +90,7 @@ const Header: React.FC = () => {
             <a 
               key={link} 
               href="#" 
-              onMouseEnter={() => setActiveDropdown(link)}
+              onMouseEnter={() => handleDropdown(link)}
               className={`px-4 py-2 rounded-md transition-colors ${activeDropdown === link ? 'bg-black/5' : 'hover:bg-black/5'}`}
             >
               {link}
@@ -135,132 +110,138 @@ const Header: React.FC = () => {
           </button>
           <button 
             onClick={() => setIsMobileMenuOpen(true)}
-            className={`md:hidden flex items-center px-4 py-1.5 rounded-md font-medium text-sm transition-colors ${isScrolled ? 'bg-black/5' : 'bg-white/20 backdrop-blur-sm text-white md:text-black md:bg-black/5'}`} 
+            className={`md:hidden flex items-center px-4 py-1.5 rounded-md font-medium text-sm transition-colors ${isScrolled || activeDropdown ? 'bg-black/5 text-black' : 'bg-white/20 backdrop-blur-sm text-white'}`} 
             aria-label="Menu"
           >
             Menu
           </button>
         </div>
 
-        {/* Mega Menus Wrapper */}
-        <div className={`absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-xl transition-all duration-300 origin-top ${activeDropdown ? 'scale-y-100 opacity-100 py-16' : 'scale-y-0 opacity-0 py-0 pointer-events-none'}`}>
+        {/* Mega Menu Overlay */}
+        <div className={`absolute top-full left-0 w-full bg-white border-t border-gray-100 shadow-xl transition-all duration-300 origin-top overflow-hidden
+          ${activeDropdown ? 'scale-y-100 opacity-100 max-h-[85vh] py-12' : 'scale-y-0 opacity-0 max-h-0 py-0 pointer-events-none'}`}>
           
-          {/* Vehicles Mega Menu */}
-          {activeDropdown === 'Vehicles' && (
-            <div className="max-w-[1400px] mx-auto grid grid-cols-[3fr_1fr] px-12">
-              <div className="grid grid-cols-4 gap-x-4 gap-y-12">
-                {vehicleModels.map((car) => (
-                  <div key={car.name} className="flex flex-col items-center group">
-                    <img src={car.image} alt={car.name} className="w-full max-w-[240px] h-auto object-contain mb-4 transform group-hover:scale-105 transition-transform duration-500" />
-                    <h4 className="text-[17px] font-bold mb-2">{car.name}</h4>
-                    <div className="flex space-x-4 text-[13px] font-medium text-gray-500">
-                      {car.links.map((link, idx) => (
-                        <a key={idx} href="#" className="underline underline-offset-4 decoration-gray-300 hover:text-black hover:decoration-black transition-all">{link}</a>
-                      ))}
+          <div className="max-w-[1400px] mx-auto px-12 h-full overflow-y-auto no-scrollbar">
+            {activeDropdown === 'Vehicles' && (
+              <div className="grid grid-cols-[3fr_1fr] gap-x-12">
+                <div className="grid grid-cols-4 gap-x-8 gap-y-6">
+                  {vehicleModels.map((car) => (
+                    <div key={car.name} className="flex flex-col items-center group mb-2">
+                      <img src={car.image} alt={car.name} className="w-full h-auto max-h-[120px] object-contain mb-3" />
+                      <h4 className="text-[16px] font-bold mb-1">{car.name}</h4>
+                      <div className="flex space-x-3 text-[12px] font-medium text-gray-500">
+                        {car.links.map((link, idx) => (
+                          <a key={idx} href="#" className="underline underline-offset-4 decoration-gray-300 hover:text-black transition-all">
+                            {typeof link === 'string' ? link : link.text}
+                          </a>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <div className="border-l border-gray-200 ml-12 pl-12 flex flex-col space-y-4">
-                {vehicleSideLinks.map((link) => (
-                  <a key={link} href="#" className="text-[14px] font-semibold text-black hover:opacity-70 transition-opacity">
-                    {link}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Energy Mega Menu */}
-          {activeDropdown === 'Energy' && (
-            <div className="max-w-[1400px] mx-auto grid grid-cols-[3fr_1fr] px-12">
-              <div className="grid grid-cols-4 gap-x-4 gap-y-12">
-                {energyProducts.map((prod) => (
-                  <div key={prod.name} className="flex flex-col items-center group">
-                    <img src={prod.image} alt={prod.name} className="w-full max-w-[240px] h-auto object-contain mb-4 transform group-hover:scale-105 transition-transform duration-500" />
-                    <h4 className="text-[17px] font-bold mb-2">{prod.name}</h4>
-                    <div className="flex space-x-4 text-[13px] font-medium text-gray-500">
-                      {prod.links.map((link, idx) => (
-                        <a key={idx} href="#" className="underline underline-offset-4 decoration-gray-300 hover:text-black hover:decoration-black transition-all">{link}</a>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="border-l border-gray-200 ml-12 pl-12 flex flex-col space-y-4">
-                {energySideLinks.map((link) => (
-                  <a key={link} href="#" className="text-[14px] font-semibold text-black hover:opacity-70 transition-opacity">
-                    {link}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Charging Mega Menu */}
-          {activeDropdown === 'Charging' && (
-            <div className="max-w-[1400px] mx-auto grid grid-cols-[3fr_1fr] px-12">
-              <div className="grid grid-cols-3 gap-x-4 gap-y-12">
-                {chargingProducts.map((prod) => (
-                  <div key={prod.name} className="flex flex-col items-center group">
-                    <img src={prod.image} alt={prod.name} className="w-full max-w-[240px] h-auto object-contain mb-4 transform group-hover:scale-105 transition-transform duration-500" />
-                    <h4 className="text-[17px] font-bold mb-2 text-center">{prod.name}</h4>
-                    <div className="flex space-x-4 text-[13px] font-medium text-gray-500">
-                      {prod.links.map((link, idx) => (
-                        <a key={idx} href="#" className="underline underline-offset-4 decoration-gray-300 hover:text-black hover:decoration-black transition-all">{link}</a>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="border-l border-gray-200 ml-12 pl-12 flex flex-col space-y-4">
-                {chargingSideLinks.map((link) => (
-                  <a key={link} href="#" className="text-[14px] font-semibold text-black hover:opacity-70 transition-opacity">
-                    {link}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Shop Mega Menu */}
-          {activeDropdown === 'Shop' && (
-            <div className="max-w-6xl mx-auto flex justify-center items-center gap-x-12 px-12">
-              {shopProducts.map((prod) => (
-                <div key={prod.name} className="flex flex-col items-center group cursor-pointer">
-                  <img src={prod.image} alt={prod.name} className="w-full max-w-[200px] h-auto object-contain mb-6 transform group-hover:scale-105 transition-transform duration-500" />
-                  <h4 className="text-[18px] font-bold text-black">{prod.name}</h4>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Discover Mega Menu */}
-          {activeDropdown === 'Discover' && (
-            <div className="max-w-6xl mx-auto grid grid-cols-3 gap-12 px-12">
-              {Object.entries(discoverLinks).map(([category, links]) => (
-                <div key={category}>
-                  <h3 className="text-gray-500 text-[14px] font-medium mb-6 uppercase tracking-wider">{category}</h3>
-                  <ul className="space-y-4">
-                    {links.map((link) => (
-                      <li key={link}>
-                        <a href="#" className="text-black text-[16px] font-semibold hover:opacity-70 transition-opacity">
-                          {link}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="border-l border-gray-200 pl-12 flex flex-col space-y-3">
+                  {vehicleSideLinks.map((link) => (
+                    <a key={link} href="#" className="text-[14px] font-semibold text-black hover:opacity-70 transition-opacity">
+                      {link}
+                    </a>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
+
+            {activeDropdown === 'Energy' && (
+              <div className="grid grid-cols-[3fr_1fr] gap-x-12">
+                <div className="grid grid-cols-4 gap-x-8 gap-y-6">
+                  {energyProducts.map((prod) => (
+                    <div key={prod.name} className="flex flex-col items-center group">
+                      <img src={prod.image} alt={prod.name} className="w-full h-auto max-h-[140px] object-contain mb-4" />
+                      <h4 className="text-[16px] font-bold mb-1">{prod.name}</h4>
+                      <div className="flex space-x-3 text-[12px] font-medium text-gray-500">
+                        {prod.links.map((link, idx) => (
+                          <a key={idx} href="#" className="underline underline-offset-4 decoration-gray-300 hover:text-black transition-all">{link}</a>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-l border-gray-200 pl-12 flex flex-col space-y-4">
+                  {['Schedule a Consultation', 'Why Solar', 'Incentives', 'Support', 'Commercial'].map((link) => (
+                    <a key={link} href="#" className="text-[14px] font-semibold text-black hover:opacity-70 transition-opacity">
+                      {link}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeDropdown === 'Discover' && (
+              <div className="grid grid-cols-3 gap-x-4 max-w-5xl">
+                {Object.entries(discoverLinks).map(([category, links]) => (
+                  <div key={category}>
+                    <h3 className="text-gray-500 text-[12px] font-medium mb-4 uppercase tracking-wider">{category}</h3>
+                    <ul className="space-y-3">
+                      {links.map((link) => (
+                        <li key={link}>
+                          <a href="#" className="text-black text-[14px] font-semibold hover:opacity-70 transition-opacity">
+                            {link}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeDropdown === 'Shop' && (
+              <div className="flex justify-center gap-x-16 py-8">
+                {shopProducts.map((prod) => (
+                  <div key={prod.name} className="flex flex-col items-center group cursor-pointer">
+                    <img src={prod.image} alt={prod.name} className="w-48 h-auto object-contain mb-6 transition-transform group-hover:scale-105" />
+                    <h4 className="text-[18px] font-bold text-black">{prod.name}</h4>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {activeDropdown === 'Charging' && (
+               <div className="grid grid-cols-[3fr_1fr] gap-x-12">
+               <div className="grid grid-cols-3 gap-x-8 gap-y-12">
+                 {[
+                   { name: 'Charging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883796/jg84dkls9i9bz17pvep5.avif', links: ['Learn'] },
+                   { name: 'Home Charging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883800/lfomn5nx32cpgfdlsetq.avif', links: ['Learn', 'Shop'] },
+                   { name: 'Supercharging', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883803/yy9cjo0lbyu0s6czvnly.avif', links: ['Learn', 'Find'] },
+                   { name: 'Wall Connector for Business', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883823/esm3oqvefealnn2prxvi.avif', links: ['Learn', 'Order'] },
+                   { name: 'Supercharger for Business', image: 'https://res.cloudinary.com/dqhawdcol/image/upload/v1767883857/v87ghkhrqfvrl0sfxanb.avif', links: ['Learn', 'Order'] },
+                 ].map((prod) => (
+                   <div key={prod.name} className="flex flex-col items-center">
+                     <img src={prod.image} alt={prod.name} className="w-full h-auto max-h-[140px] object-contain mb-4" />
+                     <h4 className="text-[16px] font-bold mb-1">{prod.name}</h4>
+                     <div className="flex space-x-3 text-[12px] font-medium text-gray-500">
+                       {prod.links.map((link, idx) => (
+                         <a key={idx} href="#" className="underline underline-offset-4 decoration-gray-300 hover:text-black transition-all">{link}</a>
+                       ))}
+                     </div>
+                   </div>
+                 ))}
+               </div>
+               <div className="border-l border-gray-200 pl-12 flex flex-col space-y-4">
+                 {['Help Me Charge', 'Charging Calculator', 'Charging With NACS', 'Supercharger Voting'].map((link) => (
+                   <a key={link} href="#" className="text-[14px] font-semibold text-black hover:opacity-70 transition-opacity">
+                     {link}
+                   </a>
+                 ))}
+               </div>
+             </div>
+            )}
+          </div>
         </div>
       </header>
 
       {/* Mobile Menu Overlay */}
       <div className={`fixed inset-0 z-[100] bg-white transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="flex justify-end p-6">
-          <button onClick={() => setIsMobileMenuOpen(false)} aria-label="Close Menu">
+          <button onClick={() => setIsMobileMenuOpen(false)}>
             <X size={28} className="text-gray-800" />
           </button>
         </div>
@@ -268,31 +249,25 @@ const Header: React.FC = () => {
         <div className="px-8 pb-12 overflow-y-auto h-full flex flex-col">
           <nav className="flex-1">
             <ul className="space-y-6">
-              {mobileLinks.map((link) => (
-                <li key={link.name} className="flex items-center justify-between group cursor-pointer py-2">
-                  <span className="text-[20px] font-semibold text-gray-800">{link.name}</span>
-                  {link.hasSub && <ChevronRight size={20} className="text-gray-400" />}
+              {['Vehicles', 'Energy', 'Charging', 'Discover', 'Shop', 'Support'].map((name) => (
+                <li key={name} className="flex items-center justify-between group cursor-pointer py-2 border-b border-gray-100 last:border-0">
+                  <span className="text-[20px] font-semibold text-gray-800">{name}</span>
+                  <ChevronRight size={20} className="text-gray-400" />
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="mt-12 space-y-8 pb-12">
+          <div className="mt-12 space-y-6 pb-20">
             <div className="flex items-center space-x-4 cursor-pointer">
               <Globe size={24} className="text-gray-800" />
               <div className="flex flex-col">
                 <span className="text-[16px] font-semibold">United States</span>
                 <span className="text-[14px] text-gray-500">English</span>
               </div>
-              <div className="ml-auto">
-                <ChevronRight size={20} className="text-gray-400" />
-              </div>
             </div>
-
             <div className="flex items-center space-x-4 cursor-pointer">
-              <div className="w-6 h-6 rounded-full border-2 border-gray-800 flex items-center justify-center">
-                <ProfileIcon className="w-4 h-4 text-gray-800" />
-              </div>
+              <ProfileIcon className="w-6 h-6 text-gray-800" />
               <span className="text-[16px] font-semibold">Account</span>
             </div>
           </div>
