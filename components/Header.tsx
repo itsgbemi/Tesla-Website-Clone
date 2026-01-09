@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuOpenChange }) => {
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 flex items-center justify-between px-6 md:px-12 py-5 
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 flex items-center justify-between px-6 md:px-12 py-3 md:py-3.5 
           ${isScrolled || activeDropdown ? 'bg-white text-black' : 'bg-transparent text-white md:text-black md:bg-white'}`}
         onMouseLeave={() => handleDropdown(null)}
       >
@@ -98,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuOpenChange }) => {
           ))}
         </nav>
 
-        <div className="flex-1 flex justify-end items-center space-x-2 md:space-x-4">
+        <div className="flex-1 flex justify-end items-center space-x-0.5 md:space-x-1">
           <button className="hidden md:block p-2 hover:bg-black/5 rounded-md transition-colors" aria-label="Support">
             <HelpCircle size={20} />
           </button>

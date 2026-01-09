@@ -19,10 +19,10 @@ const FeaturesSection: React.FC = () => {
 
   return (
     <section className="bg-white py-6 px-4 md:px-12">
-      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr] gap-6">
         
-        {/* Full Self-Driving Video Card */}
-        <div className="relative rounded-xl overflow-hidden aspect-[4/5] md:aspect-square bg-gray-100 group">
+        {/* Full Self-Driving Video Card - Dominant Column */}
+        <div className="relative rounded-xl overflow-hidden aspect-[4/5] md:aspect-auto md:h-[640px] bg-gray-100 group">
           <video
             ref={videoRef}
             preload="none"
@@ -46,7 +46,7 @@ const FeaturesSection: React.FC = () => {
           </button>
 
           {/* Bottom Content Overlay */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 bg-gradient-to-t from-black/50 via-transparent to-transparent">
             <h3 className="text-white text-[28px] md:text-[36px] font-semibold mb-6 tracking-tight drop-shadow-md">
               Full Self-Driving (Supervised)
             </h3>
@@ -61,8 +61,8 @@ const FeaturesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Features That Come Standard Image Card */}
-        <div className="relative rounded-xl overflow-hidden aspect-[4/5] md:aspect-square bg-gray-100 group">
+        {/* Features That Come Standard Image Card - Smaller Column */}
+        <div className="relative rounded-xl overflow-hidden aspect-[4/5] md:aspect-auto md:h-[640px] bg-gray-100 group">
           <img 
             src="https://res.cloudinary.com/dqhawdcol/image/upload/v1767974934/n2ndwyz317fmfetrmn4n.avif" 
             alt="Standard Features" 
@@ -70,7 +70,7 @@ const FeaturesSection: React.FC = () => {
           />
           
           {/* Bottom Content Overlay */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-10 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12 bg-gradient-to-t from-black/50 via-transparent to-transparent">
             <h3 className="text-white text-[28px] md:text-[36px] font-semibold mb-6 tracking-tight drop-shadow-md">
               Features That Come Standard
             </h3>

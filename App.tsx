@@ -7,6 +7,7 @@ import StickyControls from './components/StickyControls';
 import VehicleModelCarousel from './components/VehicleModelCarousel';
 import PromotionsSection from './components/PromotionsSection';
 import FeaturesSection from './components/FeaturesSection';
+import EnergyCarousel from './components/EnergyCarousel';
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,11 +30,14 @@ function App() {
         {/* Vehicle Model Showcase Carousel */}
         <VehicleModelCarousel />
 
+        {/* Promotions Section (Current Offers / American Heroes) */}
+        <PromotionsSection />
+
         {/* FSD Video and Features Cards */}
         <FeaturesSection />
 
-        {/* Promotions Section (Current Offers / American Heroes) */}
-        <PromotionsSection />
+        {/* Energy & Power Showcase Section */}
+        <EnergyCarousel />
       </main>
 
       {/* Site Footer */}
